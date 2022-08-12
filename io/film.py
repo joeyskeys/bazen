@@ -1,6 +1,7 @@
 
 import bpy
 import mathutils
+import xml.etree.ElementTree as ET
 from .base import BaseIO
 
 
@@ -19,7 +20,9 @@ class FilmIO(BaseIO):
         return bpy.context.scene.bitto_film_props
 
     def write_description(self, handle):
-        pass
+        prop_strs = map(' '.join, zip(['int'] * 2, self.get_resolution()))
+        prop_dict = dict(zip(('width', 'height'), prop_strs))
+        film_node = ET.SubElement(handle, 'Film', prop_dict)
 
     def feed_api(self):
         pass

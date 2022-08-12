@@ -2,6 +2,7 @@
 import bpy
 import mathutils
 import math
+import xml.etree.ElementTree as ET
 from .base import BaseIO
 
 
@@ -23,11 +24,20 @@ class CameraIO(BaseIO):
         up_vec.rotate(camera_matrix.to_3x3())
         return eye_pos, look_vec, up_vec
 
+    def get_fov(self):
+        return bpy.context.scene.camera.data.angle
+
     def get_props(self):
         return bpy.context.scene.bitto_camera_props
 
-    def write_description(self):
-        pass
+    def write_description(self, handle):
+        pos, look_vec, up_vec = self.get_camera_infos()
+        look_at = pos + look_vec
+        fov = self.get_fov()
+        props = (' '.join(pos.to_tuple()), ' '.join(look_at.to_tuple()), ' '.join(up_vec.to_tuple()), str(fov))
+        prop_strs = map(' '.join, zip(['float3'] * 3 + ['float'], props))
+        prop_dict = dict(zip(('position', 'lookat', 'up', 'fov'), prop_strs))
+        camera_node = ET.SubElement(handle, 'Camera', prop_dict)
 
     def feed_api(self):
         pass
