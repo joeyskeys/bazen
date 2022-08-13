@@ -7,4 +7,5 @@ bprop_map = {
     'bool' : bpy.props.BoolProperty,
     'string' : bpy.props.StringProperty,
     'fvec' : bpy.props.FloatVectorProperty,
+    'enum' : bpy.props.EnumProperty,
 }

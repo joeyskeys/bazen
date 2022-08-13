@@ -28,7 +28,40 @@ film_props = (
 
 camera_props = ()
 
-integrator_props = ()
+accelerator_props = (
+    {
+        'type' : 'enum',
+        'name' : 'accelerator_type',
+        'text' : 'AcceleratorType',
+        'props' : {
+            'items' : (
+                ('Accelerator', 'BasicAccel', ''),
+                ('BVHAccelerator', 'BVHAccel', ''),
+                ('EmbreeAccelerator', 'EmbreeAccel', ''),
+            ),
+            'default' : 'EmbreeAccelerator',
+        }
+    }
+)
+
+integrator_props = (
+    {
+        'type' : 'enum',
+        'name' : 'integrator_type',
+        'text' : 'IntegratorType',
+        'props' : {
+            'items' : (
+                ('NormalIntegrator', 'Normal', ''),
+                ('AmbientOcclusionIntegrator', 'AmbientOcculusion', ''),
+                ('WhittedIntegrator', 'Whitted', ''),
+                ('PathMatsIntegrator', 'PathMats', ''),
+                ('PathEmsIntegrator', 'PathEms', ''),
+                ('PathIntegrator', 'Path', ''),
+            ),
+            'default' : 'PathIntegrator',
+        }
+    }
+)
 
 light_props = ()
 

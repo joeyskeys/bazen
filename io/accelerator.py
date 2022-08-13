@@ -1,5 +1,6 @@
 
 import bpy
+import xml.etree.ElementTree as ET
 from .base import BaseIO
 
 
@@ -14,7 +15,8 @@ class AcceleratorIO(BaseIO):
         return bpy.context.scene.bitto_accelerator_props
 
     def write_description(self, handle):
-        pass
+        props = self.get_props()
+        acc_node = ET.SubElement(handle, props.accelerator_type)
 
     def feed_api(self):
         pass
