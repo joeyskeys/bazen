@@ -1,6 +1,7 @@
 
 import bpy
 from ..utils.registry import shading_node_registry, ShadingNode
+from ..utils.osl_utils import load_osl_shaders
 
 
 class BittoOSLNode(bpy.types.ShaderNode):

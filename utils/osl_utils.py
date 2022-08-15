@@ -1,6 +1,26 @@
 
-import os
+import os, subprocess
 from ..ui.preferences import get_pref
+
+
+def get_oso_info(oslinfo, oso_path):
+    oslinfo_cmd = ' '.join([oslinfo, oso_path])
+    ret = subprocess.run(oslinfo_cmd, shell=True, stdout=subprocess.PIPE)
+    return ret.stdout.decode('utf-8')
+
+
+def parse_param_info(param_line):
+    # Currently we don't have python binding to get the information of oso parameters,
+    # use the osl utility for now
+    comps = param_line.split(' ')
+    ptype = comps[0]
+    pname = comps[1]
+    pdefault = None
+    if ptype in ('color', 'point', 'vector', 'normal'):
+        pdefault = map(float, comps[3 : 6])
+    else:
+        # This works only for basic types
+        pdefault = eval('{}({})'.format(ptype, comps[2]))
 
 
 def load_osl_shaders():
@@ -13,7 +33,12 @@ def load_osl_shaders():
     if not osl_shader_location:
         raise Exception('osl shader location not set')
 
+    param_infos = {}
     if os.path.isdir(osl_shader_location):
         for shader in os.listdir(osl_shader_location):
             if shader.endswith('.oso'):
-                pass
+                info = get_oso_info(osl_query_location, os.path.join(osl_shader_location, shader))
+                for param_line in info:
+                    param_infos[shader] = parse_param_info(param_line)
+
+    return param_infos
