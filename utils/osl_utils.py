@@ -1,5 +1,7 @@
 
 import os, subprocess
+
+from nodes.shading import BittoOSLNode
 from ..ui.preferences import get_pref
 
 
@@ -39,6 +41,14 @@ def load_osl_shaders():
             if shader.endswith('.oso'):
                 info = get_oso_info(osl_query_location, os.path.join(osl_shader_location, shader))
                 for param_line in info:
-                    param_infos[shader] = parse_param_info(param_line)
+                    param_infos[shader.split('.')[0]] = parse_param_info(param_line)
 
     return param_infos
+
+
+def generate_shader_nodes():
+    node_infos = load_osl_shaders()
+    node_clss = []
+    for node_name, node_info in node_infos.items():
+        node_cls = type(node_name, (BittoOSLNode), node_infos)
+        node_clss.append(node_cls)
