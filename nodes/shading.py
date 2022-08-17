@@ -1,6 +1,7 @@
 
 import bpy
 from ..utils.registry import shading_node_registry, ShadingNode
+from ..utils.osl_utils import generate_shader_nodes
 
 
 class BittoOSLNode(bpy.types.ShaderNode):
@@ -24,3 +25,9 @@ class BittoOSLNode(bpy.types.ShaderNode):
 
     def init(self, context):
         pass
+
+
+def setup():
+    new_nodes = generate_shader_nodes()
+    for node_cls, node_category in new_nodes:
+        shading_node_registry.add_new_shading_class(node_cls, node_category)

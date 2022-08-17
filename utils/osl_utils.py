@@ -23,6 +23,7 @@ def parse_param_info(param_line):
     else:
         # This works only for basic types
         pdefault = eval('{}({})'.format(ptype, comps[2]))
+    return (ptype, pname, pdefault)
 
 
 def load_osl_shaders():
@@ -35,20 +36,39 @@ def load_osl_shaders():
     if not osl_shader_location:
         raise Exception('osl shader location not set')
 
-    param_infos = {}
+    shader_infos = {}
     if os.path.isdir(osl_shader_location):
         for shader in os.listdir(osl_shader_location):
             if shader.endswith('.oso'):
+                param_infos = []
                 info = get_oso_info(osl_query_location, os.path.join(osl_shader_location, shader))
                 for param_line in info:
-                    param_infos[shader.split('.')[0]] = parse_param_info(param_line)
+                     param_infos.append(parse_param_info(param_line))
+                shader_infos[shader.split('.')[0]] = param_infos
 
-    return param_infos
+    return shader_infos
 
 
 def generate_shader_nodes():
     node_infos = load_osl_shaders()
     node_clss = []
     for node_name, node_info in node_infos.items():
-        node_cls = type(node_name, (BittoOSLNode), node_infos)
-        node_clss.append(node_cls)
+        cap_name = node_name.capitalize()
+        node_cls = type(cap_name, (BittoOSLNode), {})
+        node_cls.bl_icon = 'MATERIAL'
+        node_cls.bl_label = cap_name
+        # Currently have no way to identify whether is shader node or a texture node
+        # Output
+        node_cls.outputs.new('NodeSocketColor', 'Color')
+
+        # Inputs
+        for input_info in node_info:
+            input_socket = node_cls.inputs.new(input_info[0], input_info[1])
+            input_socket.default_value = input_info[2]
+
+        # Attributes
+        # TODO : oslinfo cannot get metadata information
+
+        node_clss.append((node_clss, 'Material'))
+
+    return node_clss
