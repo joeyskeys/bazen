@@ -6,7 +6,7 @@ from ..ui.preferences import get_pref
 
 
 def get_oso_info(oslinfo, oso_path):
-    oslinfo_cmd = ' '.join([oslinfo, oso_path])
+    oslinfo_cmd = ' '.join([oslinfo, '-v', oso_path])
     ret = subprocess.run(oslinfo_cmd, shell=True, stdout=subprocess.PIPE)
     return ret.stdout.decode('utf-8')
 
@@ -24,6 +24,10 @@ def parse_param_info(param_line):
         # This works only for basic types
         pdefault = eval('{}({})'.format(ptype, comps[2]))
     return (ptype, pname, pdefault)
+
+
+def parse_metadata(param_info):
+    pass
 
 
 def load_osl_shaders():
