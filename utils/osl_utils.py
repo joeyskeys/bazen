@@ -1,8 +1,11 @@
 
+from curses import meta
+from importlib.metadata import metadata
 import os, subprocess
 
 from nodes.shading import BittoOSLNode
 from ..ui.preferences import get_pref
+from ..utils.typemap import bprop_map, bsocket_map
 
 
 def get_oso_info(oslinfo, oso_path):
@@ -26,8 +29,55 @@ def parse_param_info(param_line):
     return (ptype, pname, pdefault)
 
 
+def convert_param_value(ptype, pvalue_str):
+    comps = pvalue_str.strip('[ ]').split(' ')
+    val = None
+    if ptype in ('color', 'point', 'vector', 'normal'):
+        val = map(float, comps)
+    elif ptype == 'string':
+        val = pvalue_str
+    else:
+        val = eval('{}({})'.format(ptype, pvalue_str))
+
+    return val
+
+
 def parse_metadata(param_info):
-    pass
+    in_params = False
+    param_name = None
+    shader_info = { 'params' : [] }
+    param_info = {}
+    param_type = None
+    for line in param_info:
+        line = line.strip()
+        if line.startswith('metadata:'):
+            comps = line[len('metadata: ') :].split(' ')
+            metatype = comps[0]
+            metaname = comps[1]
+            metavalue = comps[3]
+            if in_params:
+                param_info[metaname] = convert_param_value(metatype, metavalue)
+            else:
+                shader_info[metaname] = convert_param_value(metatype, metavalue)
+        elif line.startswith('Default value: '):
+            pvalue_str = line[len('Default value: ') :]
+            param_info['default'] = convert_param_value(param_type, pvalue_str)
+        elif line.startswith('surface') or line.startswith('volume') or line.startswith('displacement'):
+            comps = line.split(' ')
+            shader_info['type'] = comps[0]
+            shader_info['name'] = comps[1].strip('"')
+        else:
+            if len(param_info) > 0:
+                shader_info['params'].append(param_info)
+                param_info = {}
+
+            in_params = True
+            comps = line.split(' ')
+            param_info['name'] = comps[0].strip('"')
+            param_type = comps[1].strip('"')
+            param_info['type'] = param_type
+
+    return shader_info
 
 
 def load_osl_shaders():
@@ -46,9 +96,7 @@ def load_osl_shaders():
             if shader.endswith('.oso'):
                 param_infos = []
                 info = get_oso_info(osl_query_location, os.path.join(osl_shader_location, shader))
-                for param_line in info:
-                     param_infos.append(parse_param_info(param_line))
-                shader_infos[shader.split('.')[0]] = param_infos
+                shader_infos[shader.split('.')[0]] = parse_metadata(info)
 
     return shader_infos
 
@@ -61,14 +109,20 @@ def generate_shader_nodes():
         node_cls = type(cap_name, (BittoOSLNode), {})
         node_cls.bl_icon = 'MATERIAL'
         node_cls.bl_label = cap_name
+        node_cls.__annotations__ = {}
         # Currently have no way to identify whether is shader node or a texture node
         # Output
         node_cls.outputs.new('NodeSocketColor', 'Color')
 
         # Inputs
-        for input_info in node_info:
-            input_socket = node_cls.inputs.new(input_info[0], input_info[1])
-            input_socket.default_value = input_info[2]
+        for input_info in node_info['params']:
+            if input_info['connectable']:
+                input_socket = node_cls.inputs.new(
+                    bsocket_map[input_info['type']], input_info['name'])
+                input_socket.default_value = input_info['default']
+            else:
+                node_cls.__annotations__[input_info['name']] = bprop_map[input_info['type']](
+                    name=input_info['name'], default=input_info['default'])
 
         # Attributes
         # TODO : oslinfo cannot get metadata information

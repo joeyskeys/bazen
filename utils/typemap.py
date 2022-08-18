@@ -9,3 +9,13 @@ bprop_map = {
     'fvec' : bpy.props.FloatVectorProperty,
     'enum' : bpy.props.EnumProperty,
 }
+
+bsocket_map = {
+    'float' : 'NodeSocketFloat',
+    'int' : 'NodeSocketInt',
+    'color' : 'NodeSocketColor',
+    'vector' : 'NodeSocketVector',
+    'normal' : 'NodeSocketVector',
+    'point' : 'NodeSocketVector',
+    'bool' : 'NodeSocketBool',
+}
