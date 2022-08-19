@@ -1,8 +1,9 @@
 
 engine_name = "EXAMPLE_RENDER"
-engine_label = "Example"
+# This field should align with the name set in bl_info
+engine_label = "bazen"
 
-film_props = (
+film_props = [
     {
         'type' : 'float',
         'name' : 'example',
@@ -24,11 +25,11 @@ film_props = (
             'subtype' : 'FILE_PATH'
         }
     }
-)
+]
 
-camera_props = ()
+camera_props = []
 
-accelerator_props = (
+accelerator_props = [
     {
         'type' : 'enum',
         'name' : 'accelerator_type',
@@ -42,9 +43,9 @@ accelerator_props = (
             'default' : 'EmbreeAccelerator',
         }
     }
-)
+]
 
-integrator_props = (
+integrator_props = [
     {
         'type' : 'enum',
         'name' : 'integrator_type',
@@ -61,17 +62,38 @@ integrator_props = (
             'default' : 'PathIntegrator',
         }
     }
-)
+]
 
-light_props = ()
+light_props = []
 
-sampler_props = ()
+sampler_props = []
 
-world_props = ()
+world_props = []
 
-preference_props = ()
+preference_props = [
+    {
+        'type' : 'string',
+        'name' : 'osl_query_location',
+        'text' : 'Oslinfo Location',
+        'props' : {
+            'description' : 'Location of oslinfo',
+            'default' : 'D:/Program/oslinfo',
+            'subtype' : 'FILE_PATH'
+        }
+    },
+    {
+        'type' : 'string',
+        'name' : 'osl_shader_location',
+        'text' : 'OSL Shader Location',
+        'props' : {
+            'description' : 'Location of OSL shaders',
+            'default' : 'D:/Program/osl_shaders',
+            'subtype' : 'DIR_PATH'
+        }
+    }
+]
 
-node_categories = (
+node_categories = [
     ('BITTO_MATERIAL', 'Material'),
     ('BITTO_TEXTURE', 'Texture'),
-)
+]

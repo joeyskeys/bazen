@@ -6,6 +6,7 @@ class BittoProperties(bpy.types.PropertyGroup):
     @classmethod
     def init_annotations(cls, prop_dict):
         print('init annotation for ', cls.__name__)
+        print('prop dict', prop_dict)
         for attr in prop_dict:
             cls.__annotations__[attr['name']] = bprop_map[attr['type']](**attr['props'])
 
