@@ -20,7 +20,7 @@ class FilmIO(BaseIO):
         return bpy.context.scene.bitto_film_props
 
     def write_description(self, handle):
-        prop_strs = map(' '.join, zip(['int'] * 2, self.get_resolution()))
+        prop_strs = list(map(' '.join, zip(['int'] * 2, list(map(str, self.get_resolution())))))
         prop_dict = dict(zip(('width', 'height'), prop_strs))
         film_node = ET.SubElement(handle, 'Film', prop_dict)
 

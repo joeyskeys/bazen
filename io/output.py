@@ -29,6 +29,8 @@ class BittoOutput(object):
         self.integratorio.write_description(root)
         self.sceneio.write_description(root)
 
+        root.write(path)
+
     def feed_api(self):
         self.filmio.feed_api()
         self.cameraio.feed_api()

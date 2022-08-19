@@ -12,7 +12,7 @@ class MeshIO(BaseIO):
         pass
 
     def write_description(self, handle, obj):
-        bpy.context.selected_objects = obj
+        obj.select_set(True)
         bpy.ops.export_scene.obj(filepath='meshes/{}.obj'.format(obj.name),
             check_existing=False, use_selection=True, use_triangles=True)
         mesh_props = {

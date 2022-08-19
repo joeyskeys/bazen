@@ -1,6 +1,7 @@
 
 import bpy
 import mathutils
+import xml.etree.ElementTree as ET
 from .base import BaseIO
 
 

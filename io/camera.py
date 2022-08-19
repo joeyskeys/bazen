@@ -34,7 +34,7 @@ class CameraIO(BaseIO):
         pos, look_vec, up_vec = self.get_camera_infos()
         look_at = pos + look_vec
         fov = self.get_fov()
-        props = (' '.join(pos.to_tuple()), ' '.join(look_at.to_tuple()), ' '.join(up_vec.to_tuple()), str(fov))
+        props = (' '.join(map(str, pos.to_tuple())), ' '.join(map(str, look_at.to_tuple())), ' '.join(map(str, up_vec.to_tuple())), str(fov))
         prop_strs = map(' '.join, zip(['float3'] * 3 + ['float'], props))
         prop_dict = dict(zip(('position', 'lookat', 'up', 'fov'), prop_strs))
         camera_node = ET.SubElement(handle, 'Camera', prop_dict)

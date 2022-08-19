@@ -3,6 +3,7 @@ import os
 import bpy
 import time
 from .. import config
+from ..io.output import BittoOutput
 from ..utils.registry import regular_registry
 
 
@@ -21,7 +22,8 @@ class BittoRenderEngine(bpy.types.RenderEngine):
         pass
 
     def render(self, depsgraph):
-        print("Currently just print 'rendering'")
+        output = BittoOutput()
+        output.write_description('./output.xml')
 
     def view_update(self, context, depsgraph):
         pass

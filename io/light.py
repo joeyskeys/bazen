@@ -12,3 +12,6 @@ class LightIO(BaseIO):
 
     def get_props(self):
         return object.data.bitto_light_props
+
+    def write_description(self, handle):
+        pass
