@@ -27,6 +27,9 @@ class Bitto_PT_integrator(bpy.types.Panel):
         layout = self.layout
         layout.use_property_split = True
 
+        integraptor_props = context.scene.bitto_integrator_props
+        setup_ui(layout, config.integrator_props, integraptor_props)
+
 
 def setup():
     regular_registry.add_new_class(Bitto_PT_integrator)
