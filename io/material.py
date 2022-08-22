@@ -9,6 +9,7 @@ class MaterialIO(BaseIO):
         pass
 
     def write_description(self, handle):
+        '''
         def find_node(nodes, name):
             for n in nodes:
                 if n.bl_idname == name:
@@ -31,6 +32,8 @@ class MaterialIO(BaseIO):
             # No shader fits
             print('None proper material assigned : %s' %shader.name)
             raise Exception('None proper material assigned : %s' %shader.name)
+        '''
+        pass
 
     def feed_api(self):
         pass

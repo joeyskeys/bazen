@@ -16,12 +16,8 @@ class SceneIO(BaseIO):
         self.materialio = MaterialIO()
         self.lightio = LightIO()
 
-    def write_description(self, handle):
+    def write_description(self, handle, path):
         self.lightio.write_description(handle)
-
-        cur_selected = [o for o in bpy.context.scene.objects if o.select_get()]
-        for obj in cur_selected:
-            obj.select_set(False)
 
         objects_node = ET.SubElement(handle, 'Objects')
         for obj in bpy.context.scene.objects:
@@ -29,11 +25,8 @@ class SceneIO(BaseIO):
                 continue
 
             if obj.type == 'MESH':
-                self.meshio.write_description(objects_node, obj)
+                self.meshio.write_description(objects_node, obj, path)
                 self.materialio.write_description(objects_node)
-        
-        for obj in cur_selected:
-            obj.select_set(True)
 
     def feed_api(self):
         self.lightio.feed_api()

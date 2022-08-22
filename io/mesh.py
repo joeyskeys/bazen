@@ -2,6 +2,7 @@
 import bpy
 import xml.etree.ElementTree as ET
 from .base import BaseIO
+from ..utils.obj_export import obj_export
 
 
 class MeshIO(BaseIO):
@@ -11,13 +12,16 @@ class MeshIO(BaseIO):
     def __init__(self):
         pass
 
-    def write_description(self, handle, obj):
-        obj.select_set(True)
-        bpy.ops.export_scene.obj(filepath='meshes/{}.obj'.format(obj.name),
-            check_existing=False, use_selection=True, use_triangles=True)
+    def write_description(self, handle, obj, path):
+        obj_export(obj, path)
+        if obj.active_material is None:
+            material_name = 'Error'
+        else:
+            material_name = obj.active_material.name
+
         mesh_props = {
             'filename' : 'string meshes/{}.obj'.format(obj.name),
-            'shader_name' : obj.active_material.name
+            'shader_name' : material_name
         }
         mesh_node = ET.SubElement(handle, 'Mesh', mesh_props)
 

@@ -23,7 +23,7 @@ class BittoRenderEngine(bpy.types.RenderEngine):
 
     def render(self, depsgraph):
         output = BittoOutput()
-        output.write_description('./output.xml')
+        output.write_description('D:/tmp')
 
     def view_update(self, context, depsgraph):
         pass
