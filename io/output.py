@@ -37,7 +37,7 @@ class BittoOutput(object):
 
         #tree.write(path)
         raw = ET.tostring(scene_node, encoding='utf-8')
-        pretty = minidom.parseString(raw).toprettyxml(indent='  ')
+        pretty = minidom.parseString(raw).toprettyxml(indent='\t')
         filename = os.path.join(path, 'output.xml')
         with open(filename, 'w') as f:
             f.write(pretty)
