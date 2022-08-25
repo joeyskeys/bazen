@@ -19,12 +19,18 @@ class MeshIO(BaseIO):
         else:
             material_name = obj.active_material.name
 
+        translate = obj.location
+        angle_axis = obj.rotation_axis_angle
+        scale = obj.scale
+
         mesh_props = {
             'filename' : 'string meshes/{}.obj'.format(obj.name),
+            'translate' : 'float3 {} {} {}'.format(translate.x, translate.z, -translate.y),
+            'rotate' : 'float4 {} {} {} {}'.format(angle_axis[1], angle_axis[3], -angle_axis[2], angle_axis[0]),
+            'scale' : 'float3 {} {} {}'.format(scale.x, scale.z, scale.y),
             'shader_name' : material_name
         }
         mesh_node = ET.SubElement(handle, 'Mesh', mesh_props)
-
 
     def feed_api(self):
         pass
