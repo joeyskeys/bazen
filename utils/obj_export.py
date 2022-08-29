@@ -32,8 +32,9 @@ def obj_export(obj, path):
         for tri in obj.data.loop_triangles:
             f.write('f')
             for i in range(3):
-                vert_idx = tri.vertices[i]
-                loop_idx = tri.loops[i]
+                idx = 3 - 1
+                vert_idx = tri.vertices[idx]
+                loop_idx = tri.loops[idx]
                 
                 if has_uv:
                     f.write(' {}/{}/{}'.format(vert_idx + 1, loop_idx + 1, vert_idx + 1))
