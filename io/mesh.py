@@ -20,6 +20,8 @@ class MeshIO(BaseIO):
             material_name = obj.active_material.name
 
         translate = obj.location
+        prev_mode = obj.rotation_mode
+        obj.rotation_mode = 'AXIS_ANGLE'
         angle_axis = obj.rotation_axis_angle
         scale = obj.scale
 
@@ -30,6 +32,10 @@ class MeshIO(BaseIO):
             'scale' : 'float3 {} {} {}'.format(scale.x, scale.z, scale.y),
             'shader_name' : material_name
         }
+
+        # Restore the rotation mode
+        obj.rotation_mode = prev_mode
+
         mesh_node = ET.SubElement(handle, 'Mesh', mesh_props)
 
     def feed_api(self):

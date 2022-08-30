@@ -33,7 +33,7 @@ class CameraIO(BaseIO):
     def write_description(self, handle):
         pos, look_vec, up_vec = self.get_camera_infos()
         look_at = pos + look_vec
-        fov = self.get_fov()
+        fov = self.get_fov() / math.pi * 180
         props = (' '.join(map(str, [pos.x, pos.z, -pos.y])), ' '.join(map(str, [look_at.x, look_at.z, -look_at.y])), ' '.join(map(str, [up_vec.x, up_vec.z, -up_vec.y])), str(fov))
         prop_strs = map(' '.join, zip(['float3'] * 3 + ['float'], props))
         prop_dict = dict(zip(('position', 'lookat', 'up', 'fov'), prop_strs))
