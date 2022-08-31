@@ -27,11 +27,15 @@ class MeshIO(BaseIO):
 
         mesh_props = {
             'filename' : 'string meshes/{}.obj'.format(obj.name),
-            'translate' : 'float3 {} {} {}'.format(translate.x, translate.z, -translate.y),
-            'rotate' : 'float4 {} {} {} {}'.format(angle_axis[1], angle_axis[3], -angle_axis[2], angle_axis[0]),
-            'scale' : 'float3 {} {} {}'.format(scale.x, scale.z, scale.y),
             'shader_name' : material_name
         }
+
+        if abs(translate.x) + abs(translate.y) + abs(translate.z) > 1e-6:
+            mesh_props.update({'translate' : 'float3 {} {} {}'.format(translate.x, translate.y, translate.z)})
+        if abs(angle_axis[0]) > 1e-6:
+            mesh_props.update({'rotate' : 'float4 {} {} {} {}'.format(angle_axis[1], angle_axis[3], -angle_axis[2], angle_axis[0])})
+        if abs(scale.x - 1) + abs(scale.y - 1) + abs(scale.z - 1) > 1e-6:
+            mesh_props.update({'scale' : 'float3 {} {} {}'.format(scale.x, scale.y, scale.z)})
 
         # Restore the rotation mode
         obj.rotation_mode = prev_mode

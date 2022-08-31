@@ -24,9 +24,9 @@ def obj_export(obj, path):
                 f.write('vt {} {}\n'.format(uv_obj.uv.x, uv_obj.uv.y))
             f.write('\n')
 
-        #for v in bm.verts:
-            #f.write('vn {} {} {}\n'.format(v.normal.x, v.normal.z, -v.normal.y))
-        #f.write('\n')
+        for v in bm.verts:
+            f.write('vn {} {} {}\n'.format(v.normal.x, v.normal.z, -v.normal.y))
+        f.write('\n')
 
         obj.data.calc_loop_triangles()
         for tri in obj.data.loop_triangles:
@@ -36,9 +36,9 @@ def obj_export(obj, path):
                 loop_idx = tri.loops[i]
                 
                 if has_uv:
-                    #f.write(' {}/{}/{}'.format(vert_idx + 1, loop_idx + 1, vert_idx + 1))
-                    f.write(' {}/{}'.format(vert_idx + 1, loop_idx + 1))
+                    f.write(' {}/{}/{}'.format(vert_idx + 1, loop_idx + 1, vert_idx + 1))
+                    #f.write(' {}/{}'.format(vert_idx + 1, loop_idx + 1))
                 else:
-                    #f.write(' {}//{}'.format(vert_idx + 1, vert_idx + 1))
-                    f.write(' {}'.format(vert_idx + 1))
+                    f.write(' {}//{}'.format(vert_idx + 1, vert_idx + 1))
+                    #f.write(' {}'.format(vert_idx + 1))
             f.write('\n')
