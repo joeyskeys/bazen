@@ -4,6 +4,9 @@ from ..utils.registry import shading_node_registry, ShadingNode
 from ..ui.preferences import get_pref
 from ..utils.typemap import bprop_map, bsocket_map
 
+import pyzen
+from pyzen import osl
+
 
 class BittoOSLNode(bpy.types.ShaderNode):
     """
@@ -28,10 +31,24 @@ class BittoOSLNode(bpy.types.ShaderNode):
         pass
 
 
-def get_oso_info(oslinfo, oso_path):
-    oslinfo_cmd = ' '.join([oslinfo, '-v', oso_path])
-    ret = subprocess.run(oslinfo_cmd, shell=True, stdout=subprocess.PIPE)
-    return ret.stdout.decode('utf-8')
+def get_oso_info(oso_name, search_path):
+    #oslinfo_cmd = ' '.join([oslinfo, '-v', oso_path])
+    #ret = subprocess.run(oslinfo_cmd, shell=True, stdout=subprocess.PIPE)
+    #return ret.stdout.decode('utf-8')
+    q = osl.Querier(oso_name, search_path)
+    param_infos = []
+    for i in range(q.nparams()):
+        baset = param.getparambasetype(i)
+        dfts = None
+        if baset in ('float', 'double'):
+            dfts = q.getdefaultsf(i)
+        elif baset in ('int', 'uint', 'int8', 'uint8', 'int16', 'uint16', 'int64', 'uint64'):
+            dfts = q.getdefaultsi(i)
+        else:
+            dfts = q.getdefaultss(i)
+        param_infos.append((q.getparamname(i), q.getparamtype(i), dfts))
+    
+    return (q.shadername(), q.shadertype(), param_infos)
 
 
 def parse_param_info(param_line):
