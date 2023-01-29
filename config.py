@@ -1,3 +1,4 @@
+import os
 
 engine_name = "EXAMPLE_RENDER"
 # This field should align with the name set in bl_info
@@ -89,6 +90,24 @@ preference_props = [
             'description' : 'Location of OSL shaders',
             'default' : 'D:/Program/osl_shaders',
             'subtype' : 'DIR_PATH'
+        }
+    },
+    {
+        'type' : 'int',
+        'name' : 'sample_cnt',
+        'text' : 'Sample Count',
+        'props' : {
+            'description' : 'Sample count for each pixel',
+            'default' : 5,
+        }
+    },
+    {
+        'type' : 'int',
+        'name' : 'thread_cnt',
+        'text' : 'Thread Count',
+        'props' : {
+            'description' : 'Thread count setting',
+            'default' : os.cpu_count(),
         }
     }
 ]
