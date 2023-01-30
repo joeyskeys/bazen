@@ -5,8 +5,7 @@ from ..utils.registry import shading_node_registry, ShadingNode
 from ..ui.preferences import get_pref
 from ..utils.typemap import bprop_map, bsocket_map
 
-import pyzen
-from pyzen import osl
+from ..pyzen import osl
 
 
 class BittoOSLNode(bpy.types.ShaderNode):
@@ -20,6 +19,9 @@ class BittoOSLNode(bpy.types.ShaderNode):
     
     node_type = 'osl'
     file_name = ''
+
+    def __init__(self):
+        super(BittoOSLNode, self).__init__()
     
     def draw_buttons(self, context, layout):
         for input in self.inputs:
@@ -38,11 +40,12 @@ def get_oso_info(oso_name, search_path):
     #return ret.stdout.decode('utf-8')
     q = osl.Querier(oso_name, search_path)
     shader_info = {
-        'name' : q.getshadername(),
-        'type' : q.getshadertype(),
+        'name' : q.shadername(),
+        'type' : q.shadertype(),
         'params' : []
     }
 
+    param_infos = []
     for i in range(q.nparams()):
         '''
         baset = param.getparambasetype(i)
@@ -72,6 +75,7 @@ def get_oso_info(oso_name, search_path):
             else:
                 default = metadata.getdefaults()
             param_info[metadata.getname()] = default
+            param_infos.append(param_info)
     
     return (q.shadername(), q.shadertype(), param_infos)
 
@@ -91,10 +95,11 @@ def load_osl_shaders():
     '''
 
     shader_infos = {}
-    shader_folder_path = './shader'
+    cur_dir = os.path.dirname(os.path.realpath(__file__))
+    shader_folder_path = cur_dir + '/../shader'
     for shader_item in os.listdir(shader_folder_path):
         full_path = os.path.join(shader_folder_path, shader_item)
-        if not os.isfile(full_path):
+        if not os.path.isfile(full_path):
             continue
         if shader_item.endswith('.oso'):
             filename = shader_item.split('.')[0]
@@ -106,18 +111,20 @@ def load_osl_shaders():
 
 def generate_shader_nodes():
     node_infos = load_osl_shaders()
-    node_clss = []
+    node_classes = []
     for node_name, node_info in node_infos.items():
         cap_name = node_name.capitalize()
-        node_cls = type(cap_name, (BittoOSLNode), {})
+        node_cls = type(cap_name, (BittoOSLNode,), {})
         node_cls.bl_icon = 'MATERIAL'
         node_cls.bl_label = cap_name
+        node_cls.node_name = node_name
         node_cls.__annotations__ = {}
         # Currently have no way to identify whether is shader node or a texture node
         # Output
-        node_cls.outputs.new('NodeSocketColor', 'Color')
+        #node_cls.outputs.new('NodeSocketColor', 'Color')
 
         # Inputs
+        '''
         for input_info in node_info['params']:
             if input_info['connectable']:
                 input_socket = node_cls.inputs.new(
@@ -126,10 +133,11 @@ def generate_shader_nodes():
             else:
                 node_cls.__annotations__[input_info['name']] = bprop_map[input_info['type']](
                     name=input_info['name'], default=input_info['default'])
+        '''
 
-        node_clss.append((node_clss, 'Material'))
+        node_classes.append((node_cls, 'Material'))
 
-    return node_clss
+    return node_classes
 
 
 def setup():

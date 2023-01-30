@@ -3,7 +3,7 @@ import os
 import bpy
 import threading
 import time
-import pyzen
+from .. import pyzen
 from .tile_callback import TileCallback
 from .. import config
 from ..io.output import BittoOutput

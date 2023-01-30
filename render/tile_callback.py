@@ -1,4 +1,4 @@
-import pyzen
+from .. import pyzen
 
 
 class TileCallback(pyzen.api.RenderCallback):

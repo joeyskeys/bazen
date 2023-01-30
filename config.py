@@ -1,8 +1,8 @@
 import os
 
-engine_name = "EXAMPLE_RENDER"
 # This field should align with the name set in bl_info
-engine_label = "bazen"
+engine_name = "bazen"
+engine_label = "Bazen"
 
 film_props = [
     {
@@ -74,22 +74,12 @@ world_props = []
 preference_props = [
     {
         'type' : 'string',
-        'name' : 'osl_query_location',
-        'text' : 'Oslinfo Location',
+        'name' : 'kazen_install_path',
+        'text' : 'Kazen Installation Location',
         'props' : {
-            'description' : 'Location of oslinfo',
-            'default' : 'D:/Program/oslinfo',
-            'subtype' : 'FILE_PATH'
-        }
-    },
-    {
-        'type' : 'string',
-        'name' : 'osl_shader_location',
-        'text' : 'OSL Shader Location',
-        'props' : {
-            'description' : 'Location of OSL shaders',
-            'default' : 'D:/Program/osl_shaders',
-            'subtype' : 'DIR_PATH'
+            'description' : 'Location of Kazen installation',
+            'default' : '/usr/local',
+            'subtype' : 'FILE_PATH',
         }
     },
     {
