@@ -1,6 +1,7 @@
 from genericpath import isfile
 import os
 import bpy
+from .. import config
 from ..utils.registry import shading_node_registry, ShadingNode
 from ..ui.preferences import get_pref
 from ..utils.typemap import bprop_map, bsocket_map
@@ -20,8 +21,9 @@ class BittoOSLNode(bpy.types.ShaderNode):
     node_type = 'osl'
     file_name = ''
 
-    def __init__(self):
-        super(BittoOSLNode, self).__init__()
+    @classmethod
+    def poll(cls, tree: bpy.types.NodeTree):
+        return tree.bl_idname == 'bitto_material_nodes'
     
     def draw_buttons(self, context, layout):
         for input in self.inputs:
@@ -35,9 +37,6 @@ class BittoOSLNode(bpy.types.ShaderNode):
 
 
 def get_oso_info(oso_name, search_path):
-    #oslinfo_cmd = ' '.join([oslinfo, '-v', oso_path])
-    #ret = subprocess.run(oslinfo_cmd, shell=True, stdout=subprocess.PIPE)
-    #return ret.stdout.decode('utf-8')
     q = osl.Querier(oso_name, search_path)
     shader_info = {
         'name' : q.shadername(),
@@ -47,18 +46,6 @@ def get_oso_info(oso_name, search_path):
 
     param_infos = []
     for i in range(q.nparams()):
-        '''
-        baset = param.getparambasetype(i)
-        dfts = None
-        if baset in ('float', 'double'):
-            dfts = q.getdefaultsf(i)
-        elif baset in ('int', 'uint', 'int8', 'uint8', 'int16', 'uint16', 'int64', 'uint64'):
-            dfts = q.getdefaultsi(i)
-        else:
-            dfts = q.getdefaultss(i)
-        shader_info['params'].append((q.getparamname(i), q.getparamtype(i), dfts))
-        '''
-
         param = q.getparam(i)
         param_info = {
             'name' : param.getname(),
@@ -81,19 +68,6 @@ def get_oso_info(oso_name, search_path):
 
 
 def load_osl_shaders():
-    '''
-    perf = get_pref()
-    osl_query_location = getattr(perf, 'osl_query_location', None)
-    if not osl_query_location:
-        print('osl query location not set')
-        return {}
-
-    osl_shader_location = getattr(perf, 'osl_shader_location', None)
-    if not osl_shader_location:
-        print('osl shader location not set')
-        return {}
-    '''
-
     shader_infos = {}
     cur_dir = os.path.dirname(os.path.realpath(__file__))
     shader_folder_path = cur_dir + '/../shader'
@@ -114,26 +88,14 @@ def generate_shader_nodes():
     node_classes = []
     for node_name, node_info in node_infos.items():
         cap_name = node_name.capitalize()
-        node_cls = type(cap_name, (BittoOSLNode,), {})
+        cap_cls_name = 'Bazen' + cap_name
+        node_cls = type(cap_cls_name, (BittoOSLNode,), {})
         node_cls.bl_icon = 'MATERIAL'
+        node_cls.bl_compatibility = {config.engine_name}
         node_cls.bl_label = cap_name
+        node_cls.bl_idname = cap_cls_name 
         node_cls.node_name = node_name
         node_cls.__annotations__ = {}
-        # Currently have no way to identify whether is shader node or a texture node
-        # Output
-        #node_cls.outputs.new('NodeSocketColor', 'Color')
-
-        # Inputs
-        '''
-        for input_info in node_info['params']:
-            if input_info['connectable']:
-                input_socket = node_cls.inputs.new(
-                    bsocket_map[input_info['type']], input_info['name'])
-                input_socket.default_value = input_info['default']
-            else:
-                node_cls.__annotations__[input_info['name']] = bprop_map[input_info['type']](
-                    name=input_info['name'], default=input_info['default'])
-        '''
 
         node_classes.append((node_cls, 'Material'))
 

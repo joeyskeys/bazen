@@ -3,10 +3,6 @@ from . import nodetree
 from . import shading
 
 
-def register():
-    nodetree.register()
+def setup():
     shading.setup()
-
-
-def unregister():
-    nodetree.unregister()
+    nodetree.setup()

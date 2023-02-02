@@ -25,6 +25,7 @@ class BittoRenderEngine(bpy.types.RenderEngine):
     bl_label = config.engine_label
     bl_use_preview = True
     bl_use_shading_nodes = False
+    bl_use_shading_nodes_custom = False
     bl_use_postprocess = True
 
     # Ctor

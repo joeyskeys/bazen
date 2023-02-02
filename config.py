@@ -73,16 +73,6 @@ world_props = []
 
 preference_props = [
     {
-        'type' : 'string',
-        'name' : 'kazen_install_path',
-        'text' : 'Kazen Installation Location',
-        'props' : {
-            'description' : 'Location of Kazen installation',
-            'default' : '/usr/local',
-            'subtype' : 'FILE_PATH',
-        }
-    },
-    {
         'type' : 'int',
         'name' : 'sample_cnt',
         'text' : 'Sample Count',
@@ -102,7 +92,9 @@ preference_props = [
     }
 ]
 
+category_name = 'BAZEN'
+
 node_categories = [
-    ('BITTO_MATERIAL', 'Material'),
-    ('BITTO_TEXTURE', 'Texture'),
+    ('BazenMaterial', 'Material'),
+    ('BazenTexture', 'Texture'),
 ]
