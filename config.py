@@ -98,3 +98,5 @@ node_categories = [
     ('BazenMaterial', 'Material'),
     ('BazenTexture', 'Texture'),
 ]
+
+node_editor_convert_text = 'Use Bazen Material Nodes'

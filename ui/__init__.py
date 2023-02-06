@@ -7,6 +7,7 @@ from . import material
 from . import preferences
 from . import sampler
 from . import world
+from . import node_editor
 
 
 def setup():

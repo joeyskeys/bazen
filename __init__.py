@@ -31,9 +31,13 @@ def register():
 
     from . import render
     from . import ui
+    from . import operators
     from . import nodes
     render.setup()
     ui.setup()
+    # node_editor register is a little bit different which is just a function replacement
+    ui.node_editor.register()
+    operators.setup()
     nodes.setup()
 
     property_group_registry.register()
@@ -48,6 +52,9 @@ def unregister():
     property_group_registry.unregister()
     regular_registry.unregister()
     shading_node_registry.unregister()
+
+    from . import ui
+    ui.node_editor.unregister()
 
     from .nodes import category
     category.unregister()
