@@ -9,7 +9,7 @@ class BittoNodeTree(bpy.types.NodeTree):
     """
     """
 
-    bl_label = "Shader Editor"
+    bl_label = config.node_editor_name
     bl_idname = "bitto_material_nodes"
     bl_icon = "MATERIAL"
 

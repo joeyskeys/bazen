@@ -19,7 +19,7 @@ def init_nodetree(nt):
 
 def show_nodetree(ctx, nt):
     for area in ctx.screen.areas:
-        if area.type = 'NODE_EDITOR':
+        if area.type == 'NODE_EDITOR':
             for space in area.spaces:
                 if space.type == 'NODE_EDITOR' and not space.pin:
                     space.tree_type = nt.bl_idname

@@ -12,14 +12,18 @@ class BITTO_OT_material_new(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return polls.poll_object(context)
+        return polls.pool_object(context)
 
     def execute(self, context):
         mat = bpy.data.materials.new(name='Material')
         tree_name = 'Nodes_' + mat.name
         nodetree = bpy.data.node_groups.new(name=tree_name, type='bitto_material_nodes')
         ntop.init_nodetree(nodetree)
-        mat.bitto_nodetree = nodetree
+        # Adding attributes to bpy_struct is weird, cannot do it with
+        # assignment directly
+        # The default node_tree belongs to Cycles and don't bother
+        # with it, keep our nodetree in our own attribute
+        mat['bitto_nodetree'] = nodetree
 
         obj = context.active_object
         if obj.material_slots:

@@ -23,6 +23,9 @@ def bitto_node_header_draw(panel, context):
 
     # Now expanded via the `ui_type`.
     # layout.prop(snode, "tree_type", text="")
+    
+    types_that_support_material = {'MESH', 'CURVE', 'SURFACE', 'FONT', 'META',
+                                    'GPENCIL', 'VOLUME', 'CURVES', 'POINTCLOUD'}
 
     if snode.tree_type == 'ShaderNodeTree':
         layout.prop(snode, "shader_type", text="")
@@ -40,8 +43,6 @@ def bitto_node_header_draw(panel, context):
 
             layout.separator_spacer()
 
-            types_that_support_material = {'MESH', 'CURVE', 'SURFACE', 'FONT', 'META',
-                                            'GPENCIL', 'VOLUME', 'CURVES', 'POINTCLOUD'}
             # disable material slot buttons when pinned, cannot find correct slot within id_from (T36589)
             # disable also when the selected object does not support materials
             has_material_slots = not snode.pin and ob_type in types_that_support_material
@@ -145,7 +146,7 @@ def bitto_node_header_draw(panel, context):
         ob = context.object
 
         if ob:
-            layout.seperator_spacer()
+            layout.separator_spacer()
             ob_type = ob.type
 
             has_material_slots = not snode.pin and ob_type in types_that_support_material
@@ -155,13 +156,13 @@ def bitto_node_header_draw(panel, context):
             row.ui_units_x = 4
             row.popover(panel='NODE_PT_material_slots')
 
-            row.layout.row()
+            row = layout.row()
             row.enabled = has_material_slots
 
             mat = id_from if id_from else ob.active_material
             # bitto_mat_template_ID(row, mat)
 
-            if mat and not mat.bitto.node_tree:
+            if mat and not mat.get('bitto_nodetree'):
                 layout.operator('bitto.material_new', icon='NODETREE', text=config.node_editor_convert_text)
     ###############################################################################
 

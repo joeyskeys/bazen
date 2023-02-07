@@ -9,8 +9,9 @@ from ..utils.registry import regular_registry, property_group_registry
 #original_viewport_draw = None
 
 
-#def bitto_mat_template_ID(layout, material):
+def bitto_mat_template_ID(layout, material):
     #row = layout.row(align=True)
+    pass
 
 
 class BITTO_PT_materialslots(bpy.types.Panel):

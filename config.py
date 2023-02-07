@@ -99,4 +99,5 @@ node_categories = [
     ('BazenTexture', 'Texture'),
 ]
 
+node_editor_name = 'Bazen Shader Editor'
 node_editor_convert_text = 'Use Bazen Material Nodes'
