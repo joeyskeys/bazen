@@ -101,3 +101,4 @@ node_categories = [
 
 node_editor_name = 'Bazen Shader Editor'
 node_editor_convert_text = 'Use Bazen Material Nodes'
+output_node_label = 'BazenOutput'

@@ -1,6 +1,7 @@
 from genericpath import isfile
 import os
 import bpy
+from .base import BittoShaderNode, BittoTextureNode
 from .. import config
 from ..utils.registry import shading_node_registry, ShadingNode
 from ..ui.preferences import get_pref
@@ -36,13 +37,25 @@ class BittoOSLNode(bpy.types.ShaderNode):
         pass
 
 
+def get_default_value(param, ptype):
+    if ptype == 'int':
+        return param.getdefaulti()[0]
+    elif ptype == 'float':
+        return param.getdefaultf()[0]
+    elif ptype in ('vector', 'normal'):
+        return param.getdefaultf()
+    elif ptype == 'color':
+        return param.getdefaultf() + [1.0]
+    elif ptype == 'string':
+        return param.getdefaults()[0]
+    else:
+        print('param ', param.getname(), ' of type ', ptype, \
+            ' has no default value')
+        return param.getdefaults()
+
+
 def get_oso_info(oso_name, search_path):
     q = osl.Querier(oso_name, search_path)
-    shader_info = {
-        'name' : q.shadername(),
-        'type' : q.shadertype(),
-        'params' : []
-    }
 
     param_infos = []
     for i in range(q.nparams()):
@@ -51,19 +64,15 @@ def get_oso_info(oso_name, search_path):
             'name' : param.getname(),
             'type' : param.gettype(),
         }
+        param_info['default'] = get_default_value(param, param_info['type'])
+
         metadatas = param.getmetadatas()
         for metadata in metadatas:
             metatype = metadata.getbasetype()
-            default = None
-            if metatype == 'int':
-                default = metadata.getdefaulti()
-            elif metatype == 'float':
-                default = metadata.getdefaultf()
-            else:
-                default = metadata.getdefaults()
-            param_info[metadata.getname()] = default
-            param_infos.append(param_info)
-    
+            param_info[metadata.getname()] = get_default_value(metadata, metatype)
+
+        param_infos.append(param_info)
+
     return (q.shadername(), q.shadertype(), param_infos)
 
 
@@ -89,13 +98,15 @@ def generate_shader_nodes():
     for node_name, node_info in node_infos.items():
         cap_name = node_name.capitalize()
         cap_cls_name = 'Bazen' + cap_name
-        node_cls = type(cap_cls_name, (BittoOSLNode,), {})
+        #node_cls = type(cap_cls_name, (BittoOSLNode,), {})
+        node_cls = type(cap_cls_name, (BittoShaderNode,), {})
         node_cls.bl_icon = 'MATERIAL'
         node_cls.bl_compatibility = {config.engine_name}
         node_cls.bl_label = cap_name
         node_cls.bl_idname = cap_cls_name 
         node_cls.node_name = node_name
         node_cls.__annotations__ = {}
+        node_cls.param_infos = node_info[2]
 
         node_classes.append((node_cls, 'Material'))
 
