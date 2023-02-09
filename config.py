@@ -99,6 +99,8 @@ node_categories = [
     ('BazenTexture', 'Texture'),
 ]
 
+use_seprate_node_editor = False
 node_editor_name = 'Bazen Shader Editor'
 node_editor_convert_text = 'Use Bazen Material Nodes'
+node_editor_recover_text = 'Use Cycles Material Nodes'
 output_node_label = 'BazenOutput'

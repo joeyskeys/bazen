@@ -14,4 +14,5 @@ class BittoNodeOutput(BittoNode):
 
 
 def setup():
-    regular_registry.add_new_class(BittoNodeOutput)
+    if config.use_seprate_node_editor:
+        regular_registry.add_new_class(BittoNodeOutput)

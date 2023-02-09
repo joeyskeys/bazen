@@ -1,4 +1,5 @@
 import bpy
+from ..utils.polls import poll_nodetree
 
 
 socket_type_map = {
@@ -19,7 +20,7 @@ class BittoNode(bpy.types.Node):
 
     @classmethod
     def poll(cls, tree):
-        return tree.bl_idname == 'bitto_material_nodes'
+        return poll_nodetree(tree.bl_idname)
 
     def draw_buttons(self, context, layout: 'UILayout'):
         pass

@@ -12,7 +12,7 @@ class BITTO_OT_material_new(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return polls.pool_object(context)
+        return polls.poll_object(context)
 
     def execute(self, context):
         mat = bpy.data.materials.new(name='Material')
@@ -37,5 +37,35 @@ class BITTO_OT_material_new(bpy.types.Operator):
         return {'FINISHED'}
 
 
+class BITTO_OT_material_convert(bpy.types.Operator):
+    bl_idname = 'bitto.material_convert'
+    bl_label = 'Convert'
+    bl_description = 'Convert Cycles nodes to Bazen nodes'
+    bl_options = {'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return polls.poll_object(context)
+
+    def execute(self, context):
+        pass
+
+
+class BITTO_OT_material_recover(bpy.types.Operator):
+    bl_idname = 'bitto.material_recover'
+    bl_label = 'Recover'
+    bl_description = 'Recover Cycles nodes from Bazen nodes'
+    bl_options = {'UNDO'}
+
+    @classmethod
+    def poll(cls, context):
+        return polls.poll_object(context)
+
+    def execute(self, context):
+        pass
+
+
 def setup():
     regular_registry.add_new_class(BITTO_OT_material_new)
+    regular_registry.add_new_class(BITTO_OT_material_convert)
+    regular_registry.add_new_class(BITTO_OT_material_recover)
