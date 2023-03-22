@@ -24,5 +24,6 @@ class FilmIO(BaseIO):
         prop_dict = dict(zip(('width', 'height'), prop_strs))
         film_node = ET.SubElement(handle, 'Film', prop_dict)
 
-    def feed_api(self):
-        pass
+    def feed_api(self, scene):
+        w, h = self.get_resolution()
+        scene.set_film(w, h, output_path)
