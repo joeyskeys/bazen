@@ -2,6 +2,7 @@
 import bpy
 import xml.etree.ElementTree as ET
 from .base import BaseIO
+import pyzen
 
 
 class AcceleratorIO(BaseIO):
@@ -18,5 +19,9 @@ class AcceleratorIO(BaseIO):
         props = self.get_props()
         acc_node = ET.SubElement(handle, props.accelerator_type)
 
-    def feed_api(self):
-        pass
+    def feed_api(self, scene):
+        props = self.get_props()
+        accelerator_type_str = getattr(props, 'accelerator_type', 'Embree')
+        accelerator_type = getattr(pyzen.api.AcceleratorType, accelerator_type_str,\
+            pyzen.api.AcceleratorType.Embree)
+        scene.set_accelerator(accelerator_type)

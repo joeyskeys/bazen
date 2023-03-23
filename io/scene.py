@@ -38,15 +38,16 @@ class SceneIO(BaseIO):
     def feed_api(self):
         scene = pyzen.api.Scene()
 
-        self.integratorio.feed_api()
-        self.filmio.feed_api()
-        self.cameraio.feed_api()
-        self.lightio.feed_api()
+        self.integratorio.feed_api(scene)
+        self.filmio.feed_api(scene)
+        self.cameraio.feed_api(scene)
         
         for obj in bpy.context.scene.objects:
             if obj.hide_get():
                 continue
 
             if obj.type == 'MESH':
-                self.meshio.feed_api()
-                self.materialio.feed_api()
+                self.meshio.feed_api(scene, obj)
+                self.materialio.feed_api(scene, obj)
+            elif obj.type == 'LIGHT':
+                self.lightio.feed_api(scene, obj)

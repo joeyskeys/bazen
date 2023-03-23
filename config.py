@@ -6,29 +6,41 @@ engine_label = "Bazen"
 
 film_props = [
     {
-        'type' : 'float',
-        'name' : 'example',
-        'text' : 'Example',
-        'props' : {
-            'description' : 'this is a example property',
-            'default' : 0,
-            'min' : 0,
-            'max' : 1
-        }
-    },
-    {
         'type' : 'string',
-        'name' : 'string_prop',
-        'text' : 'BlaBla',
+        'name' : 'output',
+        'text' : 'Output',
         'props' : {
-            'description' : 'this is a example float property',
-            'default' : '',
+            'description' : 'Output path of the render',
+            'default' : './output.png',
             'subtype' : 'FILE_PATH'
         }
     }
 ]
 
-camera_props = []
+camera_props = [
+    {
+        'type' : 'float',
+        'name' : 'near_plane',
+        'text' : 'Near Plane',
+        'props' : {
+            'description' : 'Near clipping plane',
+            'default' : 1,
+            'min' : 0.1,
+            'max' : 100,
+        }
+    },
+    {
+        'type' : 'float',
+        'name' : 'far_plane',
+        'text' : 'Far Plane',
+        'props' : {
+            'description' : 'Far clipping plane',
+            'default' : 1000,
+            'min' : 10,
+            'max' : 100000,
+        }
+    },
+]
 
 accelerator_props = [
     {

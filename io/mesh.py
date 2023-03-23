@@ -42,5 +42,5 @@ class MeshIO(BaseIO):
 
         mesh_node = ET.SubElement(handle, 'Mesh', mesh_props)
 
-    def feed_api(self):
+    def feed_api(self, scene, obj):
         pass

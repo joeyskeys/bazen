@@ -22,7 +22,8 @@ class CameraIO(BaseIO):
         look_vec.rotate(camera_matrix.to_3x3())
         up_vec = mathutils.Vector((0, 1, 0))
         up_vec.rotate(camera_matrix.to_3x3())
-        return eye_pos, look_vec, up_vec
+        look_at = eye_pos + look_vec
+        return eye_pos, look_at, up_vec
 
     def get_fov(self):
         return bpy.context.scene.camera.data.angle
@@ -31,13 +32,17 @@ class CameraIO(BaseIO):
         return bpy.context.scene.bitto_camera_props
 
     def write_description(self, handle):
-        pos, look_vec, up_vec = self.get_camera_infos()
-        look_at = pos + look_vec
+        pos, look_at, up_vec = self.get_camera_infos()
         fov = self.get_fov() / math.pi * 180
         props = (' '.join(map(str, [pos.x, pos.z, -pos.y])), ' '.join(map(str, [look_at.x, look_at.z, -look_at.y])), ' '.join(map(str, [up_vec.x, up_vec.z, -up_vec.y])), str(fov))
         prop_strs = map(' '.join, zip(['float3'] * 3 + ['float'], props))
         prop_dict = dict(zip(('position', 'lookat', 'up', 'fov'), prop_strs))
         camera_node = ET.SubElement(handle, 'Camera', prop_dict)
 
-    def feed_api(self):
-        pass
+    def feed_api(self, scene):
+        pos, look_at, up_vec = self.get_camera_infos()
+        fov = self.get_fov() / math.pi * 180
+        props = self.get_props()
+        near_plane = getattr(props, 'near_plane', 1)
+        far_plane = getattr(props, 'far_plane', 1000)
+        scene.set_camera(pos, look_at, up_vec, near_plane, far_plane, fov)

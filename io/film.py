@@ -26,4 +26,6 @@ class FilmIO(BaseIO):
 
     def feed_api(self, scene):
         w, h = self.get_resolution()
+        props = self.get_props()
+        output_path = getattr(props, 'output', './output.png')
         scene.set_film(w, h, output_path)
