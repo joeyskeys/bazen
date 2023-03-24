@@ -3,6 +3,7 @@ import bpy
 import xml.etree.ElementTree as ET
 from .base import BaseIO
 from ..utils.obj_export import obj_export
+from ..utils import triangulate as tr
 
 
 class MeshIO(BaseIO):
@@ -11,6 +12,21 @@ class MeshIO(BaseIO):
 
     def __init__(self):
         pass
+
+    def get_mesh_infos(self, obj):
+        translation = tuple(obj.location)
+
+        prev_rot_mode = obj.rotation_mode
+        obj.rotation_mode = 'AXIS_ANGLE'
+        angle_axis = tuple(obj.rotation_axis_angle)
+        obj.rotation_mode = prev_rot_mode
+
+        scale = tuple(obj.scale)
+
+        if obj.active_material is None:
+            material_name = 'Error'
+        else:
+            material_name = obj.active_material.name
 
     def write_description(self, handle, obj, path):
         obj_export(obj, path)
