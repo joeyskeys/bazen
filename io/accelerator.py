@@ -2,7 +2,7 @@
 import bpy
 import xml.etree.ElementTree as ET
 from .base import BaseIO
-import pyzen
+from .. import pyzen
 
 
 class AcceleratorIO(BaseIO):

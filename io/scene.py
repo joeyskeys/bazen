@@ -8,7 +8,7 @@ from .light import LightIO
 from .integrator import IntegratorIO
 from .camera import CameraIO
 from .film import FilmIO
-import pyzen
+from .. import pyzen
 
 
 class SceneIO(BaseIO):

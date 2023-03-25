@@ -1,7 +1,7 @@
 
 import bpy
 from .base import BaseIO
-import pyzen.vec as pzvec
+from  ..pyzen import vec as pzvec
 
 
 class LightIO(BaseIO):

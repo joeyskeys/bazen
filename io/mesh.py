@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from .base import BaseIO
 from ..utils.obj_export import obj_export
 from ..utils import triangulate as tr
-import pyzen.mat as pzmat
+from ..pyzen import mat as pzmat
 
 
 class MeshIO(BaseIO):
