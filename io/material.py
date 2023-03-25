@@ -35,5 +35,5 @@ class MaterialIO(BaseIO):
         '''
         pass
 
-    def feed_api(self):
+    def feed_api(self, scene):
         pass
