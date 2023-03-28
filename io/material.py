@@ -74,7 +74,7 @@ class MaterialIO(BaseIO):
         dfs(shader)
 
         for node in nodes:
-            pyzen.api.load_oso_shader('surface', node.name, node.node_name)
+            pyzen.api.load_oso_shader('surface', node.node_name, node.name)
         for src, dst in connections:
             pyzen.api.connect_shader(src.node.name, src.name, dst.node.name, dst.name)
 

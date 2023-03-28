@@ -3,6 +3,7 @@ from .. import pyzen
 
 class TileCallback(pyzen.api.RenderCallback):
     def __init__(self, engine):
+        super(TileCallback, self).__init__()
         self.engine = engine
         self.rendered_tile_cnt = 0.0
         self.render_status = "Starting..."
