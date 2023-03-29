@@ -4,6 +4,7 @@ import mathutils
 import math
 import xml.etree.ElementTree as ET
 from .base import BaseIO
+from ..pyzen import vec as pzvec
 
 
 class CameraIO(BaseIO):
@@ -29,7 +30,7 @@ class CameraIO(BaseIO):
         return bpy.context.scene.camera.data.angle
 
     def get_props(self):
-        return bpy.context.scene.bitto_camera_props
+        return bpy.context.scene.camera.data.bitto_camera_props
 
     def write_description(self, handle):
         pos, look_at, up_vec = self.get_camera_infos()
@@ -45,4 +46,7 @@ class CameraIO(BaseIO):
         props = self.get_props()
         near_plane = getattr(props, 'near_plane', 1)
         far_plane = getattr(props, 'far_plane', 1000)
-        scene.set_camera(pos, look_at, up_vec, near_plane, far_plane, fov)
+        scene.set_camera(pzvec.Vec3f(*pos.to_tuple()),\
+            pzvec.Vec3f(*look_at.to_tuple()),\
+            pzvec.Vec3f(*up_vec.to_tuple()),\
+            near_plane, far_plane, fov)

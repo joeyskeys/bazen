@@ -51,3 +51,5 @@ class SceneIO(BaseIO):
                 self.materialio.feed_api(scene, obj)
             elif obj.type == 'LIGHT':
                 self.lightio.feed_api(scene, obj)
+
+        return scene

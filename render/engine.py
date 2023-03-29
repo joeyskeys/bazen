@@ -7,17 +7,19 @@ from .. import pyzen
 from .tile_callback import TileCallback
 from .. import config
 from ..io.output import BittoOutput
+from ..io.scene import SceneIO
 from ..ui.preferences import get_pref
 from ..utils.registry import regular_registry
 
 
 class BittoRenderThread(threading.Thread):
-    def __init__(self, renderer):
+    def __init__(self, renderer, scene):
         super(BittoRenderThread, self).__init__()
         self.renderer = renderer
+        self.scene = scene
 
     def run(self):
-        self.renderer.render()
+        self.renderer.render(self.scene)
 
 
 class BittoRenderEngine(bpy.types.RenderEngine):
@@ -48,9 +50,12 @@ class BittoRenderEngine(bpy.types.RenderEngine):
         thread_cnt = getattr(pref, 'thread_cnt', os.cpu_count())
         self.renderer = pyzen.api.Renderer(sample_cnt, thread_cnt, self.tile_cbk)
 
-        self.render_thread = BittoRenderThread(self.renderer)
+        sceneio = SceneIO()
+        scene = sceneio.feed_api()
+
+        self.render_thread = BittoRenderThread(self.renderer, scene)
         self.render_thread.start()
-        while self.render_thread.isAlive():
+        while self.render_thread.is_alive():
             self.render_thread.join(0.5)
 
         self._cleanup()
