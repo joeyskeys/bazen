@@ -220,8 +220,8 @@ def triangulateUV(obj, animated_mesh):
         elif nVertsInPoly == 4: # (a quad)
             # Split the quad into to tris
             new_verts, new_normals, new_uvs, new_triangles = triangulate_a_quat_UV(poly_verts, poly_vertnormals, poly_uvs, c_antris)
-            all_new_vertices += new_verts.to_tuple()
-            all_new_normals += new_normals.to_tuple()
+            all_new_vertices += new_verts
+            all_new_normals += new_normals
             all_new_uvs += new_uvs
             all_new_triangles += new_triangles
             c_antris = c_antris + 6 # Increment polygon vertex index counter by two triangles
@@ -283,3 +283,10 @@ def triangulate(obj, animated_mesh):
                 new_triangles += triangulate_a_ngon(face_verts, face)
 
     return verts, new_triangles
+
+def convert_to_vecs(create_func, vecs):
+    ret = []
+    for vec in vecs:
+        ret.append(create_func(e.to_tuple()))
+
+    return ret
