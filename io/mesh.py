@@ -5,6 +5,7 @@ from .base import BaseIO
 from ..utils.obj_export import obj_export
 from ..utils import triangulate as tr
 from ..pyzen import vec as pv
+from ..pyzen import mat as pm
 
 
 class MeshIO(BaseIO):
@@ -78,12 +79,12 @@ class MeshIO(BaseIO):
             raise Exception("Mesh {} doesn't have a UV set".format(obj.name))
 
         verts, normals, uvs, faces = tr.triangulateUV(obj, bm)
-        verts, normals, uvs, faces = map(tr.convert_to_tuples, (verts, normals, uvs, faces))
         verts = tr.convert_to_vecs(pv.create_vec3f, verts)
         normals = tr.convert_to_vecs(pv.create_vec3f, normals)
         uvs = tr.convert_to_vecs(pv.create_vec2f, uvs)
         faces = tr.convert_to_vecs(pv.create_vec3i, faces)
 
         # Currently leave it as a simple mesh..
-        scene.add_mesh(pzmat.Mat4f(*matrix), verts, normals, uvs, faces, mat_name)
+        print('matrix : ', matrix)
+        scene.add_mesh(pm.Mat4f(*matrix), verts, normals, uvs, faces, mat_name)
         

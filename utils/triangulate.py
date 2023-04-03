@@ -70,8 +70,8 @@ def triangulate_a_quat_UV(verts, normals, uvs, new_polyvert_idx):
                     normals[0], normals[2], normals[3]]
         new_uvs = [uvs[0], uvs[1], uvs[2],
                     uvs[0], uvs[2], uvs[3]]
-        tri_vert_indx = [new_polyvert_idx+0, new_polyvert_idx+1, new_polyvert_idx+2,
-                        new_polyvert_idx+3, new_polyvert_idx+4, new_polyvert_idx+5]
+        tri_vert_indx = [(new_polyvert_idx+0, new_polyvert_idx+1, new_polyvert_idx+2),
+                         (new_polyvert_idx+3, new_polyvert_idx+4, new_polyvert_idx+5)]
     else:
         new_verts = [verts[0], verts[1], verts[3],
                     verts[3], verts[1], verts[2]]
@@ -79,8 +79,8 @@ def triangulate_a_quat_UV(verts, normals, uvs, new_polyvert_idx):
                     normals[3], normals[1], normals[2]]
         new_uvs = [uvs[0], uvs[1], uvs[3], 
                     uvs[3], uvs[1], uvs[2]]
-        tri_vert_indx = [new_polyvert_idx+0, new_polyvert_idx+1, new_polyvert_idx+2,
-                        new_polyvert_idx+3, new_polyvert_idx+4, new_polyvert_idx+5]
+        tri_vert_indx = [(new_polyvert_idx+0, new_polyvert_idx+1, new_polyvert_idx+2),
+                         (new_polyvert_idx+3, new_polyvert_idx+4, new_polyvert_idx+5)]
         
     return new_verts, new_normals, new_uvs, tri_vert_indx
 
@@ -287,6 +287,6 @@ def triangulate(obj, animated_mesh):
 def convert_to_vecs(create_func, vecs):
     ret = []
     for vec in vecs:
-        ret.append(create_func(e.to_tuple()))
+        ret.append(create_func(tuple(vec)))
 
     return ret
