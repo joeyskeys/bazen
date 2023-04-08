@@ -26,7 +26,6 @@ class BittoNode(bpy.types.Node):
         pass
 
     def create_sockets_from_dict(self):
-        print('calling create socket function for ', len(self.param_infos), ' params')
         for info in self.param_infos:
             socket_type = socket_type_map[info['type']]
             input_socket = self.inputs.new(socket_type, info['label'])

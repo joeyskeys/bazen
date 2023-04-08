@@ -85,6 +85,5 @@ class MeshIO(BaseIO):
         faces = tr.convert_to_vecs(pv.create_vec3i, faces)
 
         # Currently leave it as a simple mesh..
-        print('matrix : ', matrix)
-        scene.add_mesh(pm.Mat4f(*matrix), verts, normals, uvs, faces, mat_name)
+        scene.add_mesh(pm.Mat4f(*matrix), verts, normals, uvs, faces, mat_name, False)
         

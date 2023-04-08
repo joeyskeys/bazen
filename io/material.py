@@ -1,4 +1,4 @@
-
+import os
 import bpy
 from ..nodes import shading
 from .base import BaseIO
@@ -46,12 +46,15 @@ class MaterialIO(BaseIO):
     def feed_api(self, scene, obj):
         # Get output node from active material
         material = obj.active_material
-        output_node = self.find_node(material.nodetree.nodes, 'ShaderNodeOutputMaterial')
+        output_node = self.find_node(material.node_tree.nodes, 'ShaderNodeOutputMaterial')
 
         if output_node is None:
             raise Exception('Cannot find output node for material : %s' %material.name)
 
-        pyzen.api.begin_shader_group(material.name)
+        lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../shader'))
+        scene.set_shader_search_path(lib_path)
+
+        scene.begin_shader_group(material.name)
 
         # Get shader node from output surface socket
         shader = output_node.inputs['Surface'].links[0].from_node
@@ -61,7 +64,7 @@ class MaterialIO(BaseIO):
 
         def dfs(node):
             nodes.append(node)
-            for input in self.inputs:
+            for input in node.inputs:
                 if input.is_linked:
                     link = input.links[0]
                     # Recursive call to iterate through the tree
@@ -73,9 +76,11 @@ class MaterialIO(BaseIO):
 
         dfs(shader)
 
-        for node in nodes:
-            pyzen.api.load_oso_shader('surface', node.node_name, node.name)
-        for src, dst in connections:
-            pyzen.api.connect_shader(src.node.name, src.name, dst.node.name, dst.name)
+        print('lib path is', lib_path)
 
-        pyzen.api.end_shader_group()
+        for node in nodes:
+            scene.load_oso_shader('surface', node.node_name, node.name, lib_path)
+        for src, dst in connections:
+            scene.connect_shader(src.node.name, src.name, dst.node.name, dst.name)
+
+        scene.end_shader_group()

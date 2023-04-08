@@ -53,3 +53,6 @@ class SceneIO(BaseIO):
                 self.lightio.feed_api(scene, obj)
 
         return scene
+
+    def get_output_path(self):
+        return getattr(self.filmio.get_props(), 'output', './output.png')

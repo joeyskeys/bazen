@@ -19,7 +19,7 @@ class LightIO(BaseIO):
 
     def feed_api(self, scene, obj):
         light_type = obj.data.type
-        light_color = obj.data.color.to_tuple()
+        light_color = tuple(obj.data.color)
         light_loc = obj.location.to_tuple()
 
         if light_type == 'POINT':
