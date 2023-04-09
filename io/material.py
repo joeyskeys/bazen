@@ -51,9 +51,6 @@ class MaterialIO(BaseIO):
         if output_node is None:
             raise Exception('Cannot find output node for material : %s' %material.name)
 
-        lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../shader'))
-        scene.set_shader_search_path(lib_path)
-
         scene.begin_shader_group(material.name)
 
         # Get shader node from output surface socket
@@ -76,7 +73,7 @@ class MaterialIO(BaseIO):
 
         dfs(shader)
 
-        print('lib path is', lib_path)
+        lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../shader'))
 
         for node in nodes:
             scene.load_oso_shader('surface', node.node_name, node.name, lib_path)

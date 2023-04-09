@@ -1,4 +1,4 @@
-
+import os
 import bpy
 import xml.etree.ElementTree as ET
 from .base import BaseIO
@@ -41,6 +41,9 @@ class SceneIO(BaseIO):
         self.integratorio.feed_api(scene)
         self.filmio.feed_api(scene)
         self.cameraio.feed_api(scene)
+
+        lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../shader'))
+        scene.set_shader_search_path(lib_path)
         
         for obj in bpy.context.scene.objects:
             if obj.hide_get():

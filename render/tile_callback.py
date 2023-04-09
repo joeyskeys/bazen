@@ -9,6 +9,7 @@ class TileCallback(pyzen.api.RenderCallback):
         self.render_status = "Starting..."
 
     def on_tile_end(self, film, tile_id):
+        print('tile end for id : ', tile_id)
         tile = film.tiles[tile_id]
         result = self.engine.begin_result(
             tile.x, tile.y,
