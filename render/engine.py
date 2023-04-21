@@ -58,7 +58,7 @@ class BittoRenderEngine(bpy.types.RenderEngine):
         self.render_thread = BittoRenderThread(self.renderer, scene, sceneio.get_output_path())
         self.render_thread.start()
         while self.render_thread.is_alive():
-            print('thread still alive')
+            #print('thread still alive')
             self.render_thread.join(0.5)
 
         self._cleanup()
