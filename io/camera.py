@@ -4,6 +4,7 @@ import mathutils
 import math
 import xml.etree.ElementTree as ET
 from .base import BaseIO
+from ..utils.frame import to_kazen_frame
 from ..pyzen import vec as pv
 
 
@@ -18,11 +19,13 @@ class CameraIO(BaseIO):
     def get_camera_infos(self):
         active_camera = bpy.context.scene.camera
         camera_matrix = active_camera.matrix_world
-        eye_pos = camera_matrix.translation
+        eye_pos = to_kazen_frame(camera_matrix.translation)
         look_vec = mathutils.Vector((0, 0, -1))
         look_vec.rotate(camera_matrix.to_3x3())
+        look_vec = to_kazen_frame(look_vec)
         up_vec = mathutils.Vector((0, 1, 0))
         up_vec.rotate(camera_matrix.to_3x3())
+        up_vec = to_kazen_frame(up_vec)
         look_at = eye_pos + look_vec
         return eye_pos, look_at, up_vec
 
@@ -46,7 +49,7 @@ class CameraIO(BaseIO):
         props = self.get_props()
         near_plane = getattr(props, 'near_plane', 1)
         far_plane = getattr(props, 'far_plane', 1000)
-        scene.set_camera(pv.create_vec3f(pos.to_tuple()),\
-            pv.create_vec3f(look_at.to_tuple()),\
-            pv.create_vec3f(up_vec.to_tuple()),\
+        scene.set_camera(pv.create_vec3f(pos),\
+            pv.create_vec3f(look_at),\
+            pv.create_vec3f(up_vec),\
             near_plane, far_plane, fov)

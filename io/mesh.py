@@ -4,6 +4,7 @@ import xml.etree.ElementTree as ET
 from .base import BaseIO
 from ..utils.obj_export import obj_export
 from ..utils import triangulate as tr
+from ..utils.frame import to_kazen_frame
 from ..pyzen import vec as pv
 from ..pyzen import mat as pm
 
@@ -30,11 +31,12 @@ class MeshIO(BaseIO):
             )
             return ret_matrix, material_name
         else:
-            translation = tuple(obj.location)
+            translation = to_kazen_frame(obj.location)
 
             prev_rot_mode = obj.rotation_mode
             obj.rotation_mode = 'AXIS_ANGLE'
             angle_axis = tuple(obj.rotation_axis_angle)
+            angle_axis = (angle_axis[0], angle_axis[1], angle_axis[3], -angle_axis[2])
             obj.rotation_mode = prev_rot_mode
 
             scale = tuple(obj.scale)
