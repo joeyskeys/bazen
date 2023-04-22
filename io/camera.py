@@ -19,15 +19,13 @@ class CameraIO(BaseIO):
     def get_camera_infos(self):
         active_camera = bpy.context.scene.camera
         camera_matrix = active_camera.matrix_world
-        eye_pos = to_kazen_frame(camera_matrix.translation)
+        eye_pos = camera_matrix.translation
         look_vec = mathutils.Vector((0, 0, -1))
         look_vec.rotate(camera_matrix.to_3x3())
-        look_vec = to_kazen_frame(look_vec)
         up_vec = mathutils.Vector((0, 1, 0))
         up_vec.rotate(camera_matrix.to_3x3())
-        up_vec = to_kazen_frame(up_vec)
         look_at = eye_pos + look_vec
-        return eye_pos, look_at, up_vec
+        return map(to_kazen_frame, (eye_pos, look_at, up_vec))
 
     def get_fov(self):
         return bpy.context.scene.camera.data.angle

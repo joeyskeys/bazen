@@ -55,6 +55,8 @@ class SceneIO(BaseIO):
             elif obj.type == 'LIGHT':
                 self.lightio.feed_api(scene, obj)
 
+        scene.build_bvh()
+
         return scene
 
     def get_output_path(self):
