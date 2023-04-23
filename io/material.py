@@ -2,6 +2,7 @@ import os
 import bpy
 from ..nodes import shading
 from .base import BaseIO
+from ..utils.light_utils import get_light_shader_name
 from .. import pyzen
 
 
@@ -44,23 +45,28 @@ class MaterialIO(BaseIO):
         pass
 
     def feed_api(self, scene, obj):
-        # Get output node from active material
-        material = obj.active_material
-
-        # Maybe it's better to have to different methods..
+        # TODO : Maybe it's better to have to different methods..
         if obj.type == 'LIGHT':
             # This means it's a delta light
             node_name = 'ShaderNodeOutputLight'
             socket_index = 0
+            # This's confusing, but light is difference from meshes
+            # reconsider the TODO above 
+            material = obj.data
+            material_name = get_light_shader_name(obj)
         else:
             node_name = 'ShaderNodeOutputMaterial'
             socket_index = 'Surface'
+            material = obj.active_material
+            material_name = material.name
+
+        # Get output node from active material
         output_node = self.find_node(material.node_tree.nodes, node_name)
 
         if output_node is None:
             raise Exception('Cannot find output node for material : %s' %material.name)
 
-        scene.begin_shader_group(material.name)
+        scene.begin_shader_group(material_name)
 
         # Get shader node from output surface socket
         shader = output_node.inputs[socket_index].links[0].from_node
