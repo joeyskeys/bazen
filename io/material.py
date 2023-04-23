@@ -46,7 +46,16 @@ class MaterialIO(BaseIO):
     def feed_api(self, scene, obj):
         # Get output node from active material
         material = obj.active_material
-        output_node = self.find_node(material.node_tree.nodes, 'ShaderNodeOutputMaterial')
+
+        # Maybe it's better to have to different methods..
+        if obj.type == 'LIGHT':
+            # This means it's a delta light
+            node_name = 'ShaderNodeOutputLight'
+            socket_index = 0
+        else:
+            node_name = 'ShaderNodeOutputMaterial'
+            socket_index = 'Surface'
+        output_node = self.find_node(material.node_tree.nodes, node_name)
 
         if output_node is None:
             raise Exception('Cannot find output node for material : %s' %material.name)
@@ -54,7 +63,7 @@ class MaterialIO(BaseIO):
         scene.begin_shader_group(material.name)
 
         # Get shader node from output surface socket
-        shader = output_node.inputs['Surface'].links[0].from_node
+        shader = output_node.inputs[socket_index].links[0].from_node
 
         nodes = []
         connections = []

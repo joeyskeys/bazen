@@ -49,11 +49,9 @@ class SceneIO(BaseIO):
             if obj.hide_get():
                 continue
 
-            if obj.type == 'MESH':
+            if obj.type == 'MESH' or 'LIGHT':
                 self.meshio.feed_api(scene, obj)
                 self.materialio.feed_api(scene, obj)
-            elif obj.type == 'LIGHT':
-                self.lightio.feed_api(scene, obj)
 
         scene.build_bvh()
 
