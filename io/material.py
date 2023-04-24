@@ -54,6 +54,9 @@ class MaterialIO(BaseIO):
             # reconsider the TODO above 
             material = obj.data
             material_name = get_light_shader_name(obj)
+
+            if material.node_tree is None:
+                raise RuntimeError("Light {} doesn't have shader assigned".format(obj.name))
         else:
             node_name = 'ShaderNodeOutputMaterial'
             socket_index = 'Surface'
