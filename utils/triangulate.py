@@ -233,7 +233,7 @@ def triangulateUV(obj, animated_mesh):
             all_new_vertices += poly_verts
             all_new_normals += poly_vertnormals
             all_new_uvs += poly_uvs
-            all_new_triangles += [c_antris+0, c_antris+1, c_antris+2]
+            all_new_triangles += [(c_antris+0, c_antris+1, c_antris+2)]
             c_antris = c_antris + 3 # Increment polygon vertex index counter by one triangle
 
     # TODO
