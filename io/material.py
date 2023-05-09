@@ -2,7 +2,7 @@ import os
 import bpy
 from ..nodes import shading
 from .base import BaseIO
-from ..utils.light_utils import get_light_shader_name
+from ..utils.shader_utils import get_light_shader_name
 from .. import pyzen
 
 
