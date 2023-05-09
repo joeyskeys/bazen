@@ -58,12 +58,16 @@ def get_oso_info(oso_name, search_path):
     q = osl.Querier(oso_name, search_path)
 
     param_infos = []
+
+    emissive_props = []
+
     for i in range(q.nparams()):
         param = q.getparam(i)
         param_info = {
             'name' : param.getname(),
             'type' : param.gettype(),
         }
+        
         param_info['default'] = get_default_value(param, param_info['type'])
 
         metadatas = param.getmetadatas()
@@ -71,9 +75,12 @@ def get_oso_info(oso_name, search_path):
             metatype = metadata.getbasetype()
             param_info[metadata.getname()] = get_default_value(metadata, metatype)
 
+        if 'is_emissive' and param_info['is_emissive'] == 1:
+            emissive_props.append(param_info['name'])
+
         param_infos.append(param_info)
 
-    return (q.shadername(), q.shadertype(), param_infos)
+    return (q.shadername(), q.shadertype(), param_infos, emissive_props)
 
 
 def load_osl_shaders():
@@ -107,6 +114,7 @@ def generate_shader_nodes():
         node_cls.node_name = node_name
         node_cls.__annotations__ = {}
         node_cls.param_infos = node_info[2]
+        node_cls.emissive_props = node_info[3]
 
         node_classes.append((node_cls, 'Material'))
 
