@@ -27,7 +27,7 @@ class BITTO_PT_camera(bpy.types.Panel):
         layout = self.layout
         layout.use_property_split = True
 
-        camera_props = context.scene.bitto_camera_props
+        camera_props = context.scene.camera.data.bitto_camera_props
         setup_ui(layout, config.camera_props, camera_props)
 
 
