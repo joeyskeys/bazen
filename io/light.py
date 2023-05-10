@@ -2,7 +2,7 @@
 import bpy
 from .base import BaseIO
 from ..utils.frame import to_kazen_frame
-from ..utils.light_utils import get_light_shader_name
+from ..utils.shader_utils import get_light_shader_name
 from  ..pyzen import vec as pzvec
 
 

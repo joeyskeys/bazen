@@ -2,7 +2,7 @@ import os
 import bpy
 from ..nodes import shading
 from .base import BaseIO
-from ..utils.shader_utils import get_light_shader_name
+from ..utils.shader_utils import get_light_shader_name, get_shader_from_material
 from .. import pyzen
 
 
@@ -63,16 +63,9 @@ class MaterialIO(BaseIO):
             material = obj.active_material
             material_name = material.name
 
-        # Get output node from active material
-        output_node = self.find_node(material.node_tree.nodes, node_name)
-
-        if output_node is None:
-            raise Exception('Cannot find output node for material : %s' %material.name)
-
         scene.begin_shader_group(material_name)
 
-        # Get shader node from output surface socket
-        shader = output_node.inputs[socket_index].links[0].from_node
+        shader = get_shader_from_material(material)
 
         nodes = []
         connections = []

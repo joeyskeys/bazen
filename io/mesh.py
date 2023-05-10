@@ -5,6 +5,7 @@ from .base import BaseIO
 from ..utils.obj_export import obj_export
 from ..utils import triangulate as tr
 from ..utils.frame import to_kazen_frame
+from ..utils.shader_utils import get_shader_from_material
 from ..pyzen import vec as pv
 from ..pyzen import mat as pm
 
@@ -65,6 +66,17 @@ class MeshIO(BaseIO):
 
         mesh_node = ET.SubElement(handle, 'Mesh', mesh_props)
 
+    @staticmethod
+    def is_zero(socket):
+        eps = 0.00000001
+        if socket.bl_idname == 'NodeSocketFloat':
+            return socket.default_value < eps
+        elif socket.bl_idname == 'NodeSocketColor':
+            v = socket.default_value
+            return v[0] < eps and v[1] < eps and v[2] < eps
+        else:
+            raise Exception('Zero check for node socket only supports float and color now')
+
     def feed_api(self, scene, obj):
         matrix, mat_name = self.get_mesh_infos(obj, True)
 
@@ -86,6 +98,15 @@ class MeshIO(BaseIO):
         uvs = tr.convert_to_vecs(pv.create_vec2f, uvs)
         faces = tr.convert_to_vecs(pv.create_vec3i, faces)
 
+        # According to emissive properties' value to set the mesh
+        # as light or not
+        is_light = False
+        shader = get_shader_from_material(obj.active_material)
+        for emissive_prop in shader.emissive_props:
+            if not self.is_zero(shader.inputs[emissive_prop]):
+                is_light = True
+                break
+
         # Currently leave it as a simple mesh..
-        scene.add_mesh(pm.Mat4f(*matrix), verts, normals, uvs, faces, mat_name, False)
+        scene.add_mesh(pm.Mat4f(*matrix), verts, normals, uvs, faces, mat_name, is_light)
         
