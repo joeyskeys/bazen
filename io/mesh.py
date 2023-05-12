@@ -17,32 +17,23 @@ class MeshIO(BaseIO):
     def __init__(self):
         pass
 
-    def get_mesh_infos(self, obj, matrix=False):
+    def get_mesh_infos(self, obj):
         if obj.active_material is None:
             material_name = 'Error'
         else:
             material_name = obj.active_material.name
 
-        if matrix:
-            ret_matrix = (
-                *tuple(obj.matrix_world[0]),
-                *tuple(obj.matrix_world[1]),
-                *tuple(obj.matrix_world[2]),
-                *tuple(obj.matrix_world[3]),
-            )
-            return ret_matrix, material_name
-        else:
-            translation = to_kazen_frame(obj.location)
+        translation = to_kazen_frame(obj.location)
 
-            prev_rot_mode = obj.rotation_mode
-            obj.rotation_mode = 'AXIS_ANGLE'
-            angle_axis = tuple(obj.rotation_axis_angle)
-            angle_axis = (angle_axis[0], angle_axis[1], angle_axis[3], -angle_axis[2])
-            obj.rotation_mode = prev_rot_mode
+        prev_rot_mode = obj.rotation_mode
+        obj.rotation_mode = 'AXIS_ANGLE'
+        angle_axis = tuple(obj.rotation_axis_angle)
+        angle_axis = (angle_axis[0], angle_axis[1], angle_axis[3], -angle_axis[2])
+        obj.rotation_mode = prev_rot_mode
 
-            scale = tuple(obj.scale)
-            
-            return translation, angle_axis, scale, material_name
+        scale = tuple(obj.scale)
+        
+        return translation, angle_axis, scale, material_name
 
     def write_description(self, handle, obj, path):
         obj_export(obj, path)
@@ -78,7 +69,10 @@ class MeshIO(BaseIO):
             raise Exception('Zero check for node socket only supports float and color now')
 
     def feed_api(self, scene, obj):
-        matrix, mat_name = self.get_mesh_infos(obj, True)
+        translation, angle_axis, scale, mat_name = self.get_mesh_infos(obj)
+        matrix = pm.translate3f(pv.create_vec3f(translation))
+        matrix *= pm.rotate3f(pv.Vec3f(angle_axis[1], angle_axis[2], angle_axis[3]), angle_axis[0])
+        matrix *= pm.scale3f(pv.create_vec3f(scale))
 
         # From James Tompkin's work
         depgraph = bpy.context.evaluated_depsgraph_get()
@@ -101,12 +95,12 @@ class MeshIO(BaseIO):
         # According to emissive properties' value to set the mesh
         # as light or not
         is_light = False
-        shader = get_shader_from_material(obj.active_material)
+        shader = get_shader_from_material(obj.active_material, 'ShaderNodeOutputMaterial', 0)
         for emissive_prop in shader.emissive_props:
             if not self.is_zero(shader.inputs[emissive_prop]):
                 is_light = True
                 break
 
         # Currently leave it as a simple mesh..
-        scene.add_mesh(pm.Mat4f(*matrix), verts, normals, uvs, faces, mat_name, is_light)
+        scene.add_mesh(matrix, verts, normals, uvs, faces, mat_name, is_light)
         

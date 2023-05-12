@@ -75,8 +75,9 @@ def get_oso_info(oso_name, search_path):
             metatype = metadata.getbasetype()
             param_info[metadata.getname()] = get_default_value(metadata, metatype)
 
-        if 'is_emissive' and param_info['is_emissive'] == 1:
-            emissive_props.append(param_info['name'])
+        if 'is_emissive' in param_info and param_info['is_emissive'] == 1:
+            # Shader parameter metadata **MUST** contain label attribute
+            emissive_props.append(param_info['label'])
 
         param_infos.append(param_info)
 

@@ -65,7 +65,7 @@ class MaterialIO(BaseIO):
 
         scene.begin_shader_group(material_name)
 
-        shader = get_shader_from_material(material)
+        shader = get_shader_from_material(material, node_name, socket_index)
 
         nodes = []
         connections = []
