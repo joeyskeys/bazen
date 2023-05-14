@@ -2,20 +2,13 @@ import os
 import bpy
 from ..nodes import shading
 from .base import BaseIO
-from ..utils.shader_utils import get_light_shader_name, get_shader_from_material
+from ..utils.shader_utils import get_light_shader_name, get_shader_from_material, set_shader_param
 from .. import pyzen
 
 
 class MaterialIO(BaseIO):
     def __init__(self):
         pass
-
-    @staticmethod
-    def find_node(nodes, name):
-        for n in nodes:
-            if n.bl_idname == name:
-                return n
-        return None
 
     def write_description(self, handle):
         '''
@@ -69,9 +62,11 @@ class MaterialIO(BaseIO):
 
         nodes = []
         connections = []
+        params = {}
 
         def dfs(node):
             nodes.append(node)
+            params[node] = []
             for input in node.inputs:
                 if input.is_linked:
                     link = input.links[0]
@@ -81,13 +76,22 @@ class MaterialIO(BaseIO):
                     # The connection follows the "from left to right" principle
                     # which means the 1st socket is the output of the upstream node
                     connections.append((link.from_socket, input))
+                else:
+                    params[node].append((node.param_infos[input.name]['name'], input.bl_idname, input.default_value))
 
         dfs(shader)
 
         lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../shader'))
 
         for node in nodes:
+            param_vals = params[node]
+            # The logic here follows the OSL API pattern
+            # Setup the parameter value first and then load
+            # the shader.
+            for pv in param_vals:
+                set_shader_param(scene, pv[0], pv[1], pv[2])
             scene.load_oso_shader('surface', node.node_name, node.name, lib_path)
+
         for src, dst in connections:
             scene.connect_shader(src.node.name, src.name, dst.node.name, dst.name)
 

@@ -57,7 +57,7 @@ def get_default_value(param, ptype):
 def get_oso_info(oso_name, search_path):
     q = osl.Querier(oso_name, search_path)
 
-    param_infos = []
+    param_infos = {}
 
     emissive_props = []
 
@@ -79,7 +79,7 @@ def get_oso_info(oso_name, search_path):
             # Shader parameter metadata **MUST** contain label attribute
             emissive_props.append(param_info['label'])
 
-        param_infos.append(param_info)
+        param_infos[param_info['label']] = param_info
 
     return (q.shadername(), q.shadertype(), param_infos, emissive_props)
 
