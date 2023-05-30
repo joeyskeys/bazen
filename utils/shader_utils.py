@@ -22,9 +22,9 @@ def get_shader_from_material(mat, node_name, socket_index):
     return shader
 
 def set_shader_param(scene, pname, ptype, pvalue):
-    if ptype == 'NodeSocketColor':
-        scene.set_shader_param_vec3(pname, pv.create_vec3f(pvalue.to_tuple()))
+    if ptype == 'NodeSocketColor' or ptype == 'NodeSocketVector':
+        scene.set_shader_param_vec3f(pname, pv.Vec3f(pvalue[0], pvalue[1], pvalue[2]))
     elif ptype == 'NodeSocketFloat':
-        scene.set_shader_param_float(pname, pvalue)
+        scene.set_shader_param_float(pname, float(pvalue))
     else:
         raise Exception('Socket type {} not supported'.format(ptype))
