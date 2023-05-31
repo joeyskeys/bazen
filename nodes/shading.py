@@ -79,7 +79,7 @@ def get_oso_info(oso_name, search_path):
             # Shader parameter metadata **MUST** contain label attribute
             emissive_props.append(param_info['label'])
 
-        print('param info', param_info)
+        #print('param info', param_info)
         param_infos[param_info['label']] = param_info
 
     return (q.shadername(), q.shadertype(), param_infos, emissive_props)

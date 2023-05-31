@@ -7,21 +7,21 @@ class Registry(object):
         self.cls_to_register = []
 
     def add_new_class(self, cls):
-        print('adding {} to list'.format(cls.__name__))
+        #print('adding {} to list'.format(cls.__name__))
         self.cls_to_register.append(cls)
 
     def cleanup(self):
         self.cls_to_register = []
 
     def register(self):
-        print('{} classes to register'.format(len(self.cls_to_register)))
+        #print('{} classes to register'.format(len(self.cls_to_register)))
         for c in self.cls_to_register:
-            print('register', c.__name__)
+            #print('register', c.__name__)
             bpy.utils.register_class(c)
 
     def unregister(self):
         for c in self.cls_to_register:
-            print('unregister', c.__name__)
+            #print('unregister', c.__name__)
             bpy.utils.unregister_class(c)
 
 
