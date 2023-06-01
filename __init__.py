@@ -1,6 +1,6 @@
 import os, sys
 from . import config
-from .utils.registry import regular_registry, shading_node_registry, property_group_registry
+from .utils.registry import *
 
 
 # Sadly bl_info related fields cannot be put into config or it will coz an 
@@ -28,6 +28,7 @@ def register():
     regular_registry.cleanup()
     shading_node_registry.cleanup()
     property_group_registry.cleanup()
+    menu_registry.cleanup()
 
     from . import render
     from . import ui
@@ -43,12 +44,14 @@ def register():
     property_group_registry.register()
     regular_registry.register()
     shading_node_registry.register()
+    menu_registry.register()
 
     from .nodes import category
     category.register()
 
 
 def unregister():
+    menu_registry.unregister()
     property_group_registry.unregister()
     regular_registry.unregister()
     shading_node_registry.unregister()

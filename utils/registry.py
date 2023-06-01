@@ -59,9 +59,33 @@ class ShadingNodeRegistry(Registry):
             self.node_categories[node_type].append((cls.__name__, cls.node_name))
 
 
+class MenuRegistry(object):
+    def __init__(self):
+        self.menus_to_register = {}
+
+    def add_new_menu_func(self, menu, menu_func):
+        if menu not in self.menus_to_register:
+            self.menus_to_register[menu] = []
+        self.menus_to_register[menu].append(menu_func)
+
+    def cleanup(self):
+        self.menus_to_register = {}
+
+    def register(self):
+        for menu, menu_funcs in self.menus_to_register.items():
+            for menu_func in menu_funcs:
+                menu.append(menu_func)
+
+    def unregister(self):
+        for menu, menu_funcs in self.menus_to_register.items():
+            for menu_func in menu_funcs:
+                menu.remove(menu_func)
+
+
 regular_registry = Registry()
 property_group_registry = PropertyGroupRegistry()
 shading_node_registry = ShadingNodeRegistry()
+menu_registry = MenuRegistry()
 
 
 class Regular(object):
