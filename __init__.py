@@ -1,5 +1,9 @@
 import os, sys
 from . import config
+from . import render
+from . import ui
+from . import operators
+from . import nodes
 from .utils.registry import *
 
 
@@ -30,10 +34,6 @@ def register():
     property_group_registry.cleanup()
     menu_registry.cleanup()
 
-    from . import render
-    from . import ui
-    from . import operators
-    from . import nodes
     render.setup()
     ui.setup()
     # node_editor register is a little bit different which is just a function replacement
@@ -45,9 +45,7 @@ def register():
     regular_registry.register()
     shading_node_registry.register()
     menu_registry.register()
-
-    from .nodes import category
-    category.register()
+    nodes.category.register()
 
 
 def unregister():
@@ -55,12 +53,8 @@ def unregister():
     property_group_registry.unregister()
     regular_registry.unregister()
     shading_node_registry.unregister()
-
-    from . import ui
     ui.node_editor.unregister()
-
-    from .nodes import category
-    category.unregister()
+    nodes.category.unregister()
 
 
 if __name__ == '__main__':
