@@ -1,6 +1,8 @@
 import typing
 import bpy
 from bpy.types import Context
+from .. import pyzen
+from ..io.scene import SceneIO
 from ..utils.registry import regular_registry, menu_registry
 
 
@@ -54,8 +56,11 @@ class DebugRenderOperator(bpy.types.Operator):
             pixel_x = int(u * img_width)
             pixel_y = int(v * img_height)
 
-            # TODO: Invoke the debug render here...
-            print('finished', pixel_x, pixel_y)
+            # Invoke the debug render here
+            renderer = pyzen.api.Renderer(1, 1, None)
+            sceneio = SceneIO()
+            scene = sceneio.feed_api()
+            renderer.render_(scene, pixel_x, pixel_y)
             return {'FINISHED'}
             
         elif event.type in {'RIGHTMOUSE', 'ESC'}:
