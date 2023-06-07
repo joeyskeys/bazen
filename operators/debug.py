@@ -60,7 +60,7 @@ class DebugRenderOperator(bpy.types.Operator):
             renderer = pyzen.api.Renderer(1, 1, None)
             sceneio = SceneIO()
             scene = sceneio.feed_api()
-            renderer.render_(scene, pixel_x, pixel_y)
+            renderer.render(scene, pixel_x, pixel_y)
             return {'FINISHED'}
             
         elif event.type in {'RIGHTMOUSE', 'ESC'}:
