@@ -6,6 +6,24 @@ engine_label = "Bazen"
 
 film_props = [
     {
+        'type' : 'int',
+        'name' : 'tile_resolution_x',
+        'text' : 'Tiles X',
+        'props' : {
+            'description' : 'Tile resolution of horizontal direction',
+            'default' : 4
+        }
+    },
+    {
+        'type' : 'int',
+        'name' : 'tile_resolution_y',
+        'text' : 'Tiles Y',
+        'props' : {
+            'description' : 'Tile resolution of vertical direction',
+            'default' : 4
+        }
+    },
+    {
         'type' : 'string',
         'name' : 'output',
         'text' : 'Output',
